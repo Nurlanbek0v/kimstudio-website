@@ -2,6 +2,11 @@ output "website_url" {
   value = "https://${var.domain}"
 }
 
+output "alb_url" {
+  description = "Temporary URL — live immediately, no domain needed"
+  value       = "http://${aws_lb.website.dns_name}"
+}
+
 output "cloudfront_domain" {
   description = "Use this to test before DNS propagates"
   value       = aws_cloudfront_distribution.website.domain_name
