@@ -34,8 +34,8 @@ resource "aws_cloudfront_distribution" "website" {
     }
 
     min_ttl     = 0
-    default_ttl = 86400   # 1 day
-    max_ttl     = 604800  # 7 days
+    default_ttl = 86400  # 1 day
+    max_ttl     = 604800 # 7 days
   }
 
   # HTML — short TTL so deploys show within 5 minutes
@@ -59,15 +59,15 @@ resource "aws_cloudfront_distribution" "website" {
 
   # SPA fallback — serve index.html on 403/404
   custom_error_response {
-    error_code            = 403
-    response_code         = 200
-    response_page_path    = "/index.html"
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
   }
 
   custom_error_response {
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
+    error_code         = 404
+    response_code      = 200
+    response_page_path = "/index.html"
   }
 
   restrictions {
