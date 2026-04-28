@@ -78,34 +78,65 @@ document.querySelectorAll(
   revealObserver.observe(el);
 });
 
-// Form submit → open pre-filled WhatsApp message
-const form = document.getElementById('contactForm');
-form.addEventListener('submit', (e) => {
+// Form submit → Formspree (email notification) + WhatsApp fallback
+const FORMSPREE_ID = 'REPLACE_WITH_YOUR_FORMSPREE_ID';
+
+const form     = document.getElementById('contactForm');
+const formNote = document.getElementById('formNote');
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  const btn  = form.querySelector('button[type="submit"]');
   const data = new FormData(form);
-  const name      = data.get('name')      || '';
-  const phone     = data.get('phone')     || '';
-  const direction = data.get('direction') || '';
-  const message   = data.get('message')  || '';
 
-  const text = [
-    `Имя: ${name}`,
-    `Телефон: ${phone}`,
-    `Направление: ${direction}`,
-    message ? `Сообщение: ${message}` : '',
-  ].filter(Boolean).join('\n');
+  btn.textContent = 'Отправляется...';
+  btn.disabled    = true;
 
-  const btn = form.querySelector('button[type="submit"]');
-  btn.textContent = 'Открываем WhatsApp...';
-  btn.disabled = true;
+  try {
+    const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method:  'POST',
+      body:    data,
+      headers: { Accept: 'application/json' },
+    });
 
-  window.open(`https://wa.me/996707430777?text=${encodeURIComponent(text)}`, '_blank');
+    if (res.ok) {
+      btn.textContent          = 'Заявка отправлена!';
+      btn.style.background     = '#4caf50';
+      btn.style.borderColor    = '#4caf50';
+      formNote.textContent     = 'Спасибо! Мы свяжемся с вами в течении дня';
+      formNote.style.color     = '#4caf50';
+      form.reset();
 
-  form.reset();
-  setTimeout(() => {
+      setTimeout(() => {
+        btn.textContent       = 'Отправить заявку';
+        btn.style.background  = '';
+        btn.style.borderColor = '';
+        btn.disabled          = false;
+        formNote.textContent  = 'Мы свяжемся с вами в течение дня';
+        formNote.style.color  = '';
+      }, 5000);
+    } else {
+      throw new Error('Formspree error');
+    }
+  } catch {
+    // Fallback: open WhatsApp with pre-filled message
+    const name      = data.get('name')      || '';
+    const phone     = data.get('phone')     || '';
+    const direction = data.get('direction') || '';
+    const message   = data.get('message')  || '';
+
+    const text = [
+      `Имя: ${name}`,
+      `Телефон: ${phone}`,
+      `Направление: ${direction}`,
+      message ? `Сообщение: ${message}` : '',
+    ].filter(Boolean).join('\n');
+
+    window.open(`https://wa.me/996707430777?text=${encodeURIComponent(text)}`, '_blank');
+
     btn.textContent = 'Отправить заявку';
-    btn.disabled = false;
-  }, 2000);
+    btn.disabled    = false;
+  }
 });
 
 // Smooth active link highlight based on scroll

@@ -7,13 +7,13 @@ variable "region" {
 variable "domain" {
   description = "Root domain"
   type        = string
-  default     = "kimstudio.com"
+  default     = "kim-studio.com"
 }
 
 variable "www_domain" {
   description = "WWW subdomain"
   type        = string
-  default     = "www.kimstudio.com"
+  default     = "www.kim-studio.com"
 }
 
 variable "project" {

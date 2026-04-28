@@ -431,6 +431,9 @@
             <input type="tel" name="phone" placeholder="Номер телефона" required />
           </div>
           <div class="form-group">
+            <input type="email" name="email" placeholder="Email (необязательно — для подтверждения)" />
+          </div>
+          <div class="form-group">
             <select name="direction">
               <option value="" disabled selected>Выберите направление</option>
               <option>Baby 1 (4–6 лет)</option>
@@ -450,7 +453,7 @@
             <textarea name="message" placeholder="Дополнительная информация (возраст, вопросы...)" rows="4"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">Отправить заявку</button>
-          <p class="form-note">Мы свяжемся с вами в течение дня</p>
+          <p class="form-note" id="formNote">Мы свяжемся с вами в течение дня</p>
         </form>
       </div>
     </div>
